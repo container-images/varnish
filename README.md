@@ -63,3 +63,21 @@ LINK =
 # Addtional flags for Docker
 FLAGS = -d
 ```
+
+# Running in Openshift
+To run this container in OpenShift, you need to change the `RunAsUser` option in the `restricted` Security Context Constraint (SCC) from `MustRunAsRange` to `RunAsAny`. Do it by running:
+
+```Shell
+$ oc login -u system:admin
+$ oc project default
+$ oc edit scc restricted
+```
+
+Find `RunAsUser` and change its value from `MustRunAsRange` to `RunAsAny`. This is needed as varnish root proccess uses this privilege to sandbox child processes.
+
+Then you can run `openshift-template.yml` in this repository:
+
+```Shell
+$ oc login -u developer
+$ oc create -f openshift-template.yml
+```
