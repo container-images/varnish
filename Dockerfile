@@ -1,9 +1,10 @@
 FROM koscicz/varnish-dummy:latest
 
 # Labels
-LABEL summary="Varnish is an HTTP accelerator" \
+LABEL name = "Varnish" \
+	summary="Varnish is an HTTP accelerator" \
 	description="Varnish is an HTTP accelerator designed for content-heavy dynamic web sites." \
-	version="5.0.0"
+	version="1.0"
 
 # Add configuration file
 ADD files/default.vcl /etc/varnish/default.vcl
