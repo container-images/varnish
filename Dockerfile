@@ -1,16 +1,17 @@
-FROM koscicz/varnish-dummy:latest
+FROM koscicz/varnish-dummy
 
 # Labels
-LABEL name = "Varnish" \
+LABEL name="Varnish" \
 	summary="Varnish is an HTTP accelerator" \
 	description="Varnish is an HTTP accelerator designed for content-heavy dynamic web sites." \
 	version="1.0"
 
+
 # Add configuration file
-ADD files/default.vcl /etc/varnish/default.vcl
+COPY files/default.vcl /etc/varnish/default.vcl
 
 # Add secret file for varnishadm
-ADD files/varnish_secret /etc/varnish_secret  
+COPY files/varnish_secret /etc/varnish_secret  
 
 # Expose ports for varnish and it's admin CLI
 EXPOSE 6801 6802
