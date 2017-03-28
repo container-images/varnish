@@ -13,8 +13,8 @@ data:
             base-runtime: master
     references:
         community: https://docs.pagure.org/modularity/
-        documentation: https://github.com/container-images/nginx
-        tracker: https://github.com/container-images/nginx
+        documentation: https://github.com/container-images/varnish
+        tracker: https://github.com/container-images/varnish
     profiles:
         default:
             rpms:
