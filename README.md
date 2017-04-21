@@ -1,6 +1,6 @@
 # Varnish HTTP Cache container
 
-This repository contains resources for Varnish cache container. This is an example, so it is not recommended to use it in production, but feel free to try it out. It uses fedora:25 with varnish 5.0.0. installed as a base image, Dockerfile for this image is in the **image** folder.
+This repository contains resources for Varnish cache container. This is an example, so it is not recommended to use it in production, but feel free to try it out. It uses fedora:26 with varnish 5.0.0.
 
 # Configuration
 
