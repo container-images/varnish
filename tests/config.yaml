@@ -1,0 +1,24 @@
+document: modularity-testing
+version: 1
+name: varnish
+modulemd-url: https://raw.githubusercontent.com/container-images/varnish/master/varnish.yaml
+service:
+    port: 6081
+packages:
+    rpms:
+        - varnish
+testdependecies:
+    rpms:
+        - nc
+module:
+    docker:
+        start: "docker run -it -p 6081:6081"
+        source: https://github.com/container-images/varnish.git
+        container: docker.io/modularitycontainers/varnish
+    rpm:
+        start: systemctl start varnish
+        stop: systemctl stop varnish
+        status: systemctl status varnish
+        repos:
+            - http://mirror.vutbr.cz/fedora/releases/26/Everything/x86_64/os/
+

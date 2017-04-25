@@ -2,7 +2,7 @@ FROM registry.fedoraproject.org/fedora:26
 
 # Image metadata
 ENV NAME=varnish \
-    PERL_VERSION=5.0.0 \
+    VARNISH_VERSION=5.0.0 \
     VERSION=0 \
     RELEASE=1 \
     ARCH=x86_64
@@ -15,7 +15,7 @@ LABEL com.redhat.component=="$NAME" \
 	version="$VERSION" \
 	release="$RELEASE.$DISTTAG" \
 	architecture="$ARCH" \
-	io.k8s.description="Varnish HTTP accelerator" \
+	io.k8s.description="Varnish is an HTTP accelerator designed for content-heavy dynamic web sites." \
 	io.k8s.display-name="Varnish" \
 	io.openshift.expose-services="6801:http" \
 	io.openshift.tags="http,proxy,varnish,varnish5" 

@@ -17,6 +17,9 @@ LINK =
 # Addtional flags for Docker
 FLAGS = -d
 
+# Modulemd file
+MODULEMDURL = file://varnish.yaml
+
 default: run
 
 build:
@@ -24,3 +27,6 @@ build:
 
 run: build
 	docker run $(FLAGS) -p $(PORT):6081 -p $(MANAGEMENT_PORT):6082 $(foreach link,$(LINK), --link $(link) )  $(IMAGE_NAME)
+test:
+	cd tests; CONFIG=config.yaml MODULE=docker MODULEMD=$(MODULEMDURL) URL="docker=$(IMAGE_NAME)" make test1
+	#cd tests; CONFIG=config2.yaml MODULE=docker MODULEMD=$(MODULEMDURL) URL="docker=$(IMAGE_NAME)" make test2
