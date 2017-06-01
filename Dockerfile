@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:26
+FROM baseruntime/baseruntime:latest
 
 # Image metadata
 ENV NAME=varnish \
@@ -20,8 +20,11 @@ LABEL com.redhat.component=="$NAME" \
 	io.openshift.expose-services="6801:http" \
 	io.openshift.tags="http,proxy,varnish,varnish5" 
 
+COPY files/varnish.repo /etc/yum.repos.d/
+
 #install varnish
-RUN dnf install -y --setopt=tsflags=nodocs varnish  && dnf -y clean all
+RUN microdnf --nodocs --enablerepo varnish install -y varnish && \
+    microdnf clean all
 
 # Add configuration file
 COPY files/default.vcl /etc/varnish/default.vcl
