@@ -1,6 +1,6 @@
 # Varnish HTTP Cache container
 
-This repository contains resources for Varnish cache container. This is an example, so it is not recommended to use it in production, but feel free to try it out. It uses fedora:26 with varnish 5.0.0.
+This repository contains resources for Varnish cache container. This is an example, so it is not recommended to use it in production, but feel free to try it out. It uses base runtime with Varnish installed as a module.
 
 # Configuration
 
