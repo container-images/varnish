@@ -8,13 +8,14 @@ ENV NAME=varnish \
     ARCH=x86_64
 
 # Labels
-LABEL com.redhat.component=="$NAME" \
+LABEL com.redhat.component="$NAME" \
     name="$FGC/$NAME" \
 	summary="Varnish is an HTTP accelerator" \
 	description="Varnish is an HTTP accelerator designed for content-heavy dynamic web sites." \
 	version="$VERSION" \
 	release="$RELEASE.$DISTTAG" \
 	architecture="$ARCH" \
+	usage="docker run -p <PORT>:6081 -p <MANAGEMENT_PORT>:6082" \
 	io.k8s.description="Varnish is an HTTP accelerator designed for content-heavy dynamic web sites." \
 	io.k8s.display-name="Varnish" \
 	io.openshift.expose-services="6801:http" \
