@@ -1,7 +1,7 @@
 .PHONY: build run default
 
 # Docker container tag
-IMAGE_NAME = varnish
+IMAGE_NAME = modularitycontainers/varnish
 
 # Port varnish will serve content on
 PORT = 8080
@@ -15,10 +15,10 @@ MANAGEMENT_PORT = 6082
 LINK = 
 
 # Addtional flags for Docker
-FLAGS = -d
+FLAGS =
 
 # Modulemd file
-MODULEMDURL = file://varnish.yaml
+MODULEMDURL = http://pkgs.fedoraproject.org/cgit/modules/varnish.git/plain/varnish.yaml
 
 default: run
 
@@ -29,4 +29,3 @@ run: build
 	docker run $(FLAGS) -p $(PORT):6081 -p $(MANAGEMENT_PORT):6082 $(foreach link,$(LINK), --link $(link) )  $(IMAGE_NAME)
 test:
 	cd tests; CONFIG=config.yaml MODULE=docker MODULEMD=$(MODULEMDURL) URL="docker=$(IMAGE_NAME)" make test1
-	#cd tests; CONFIG=config2.yaml MODULE=docker MODULEMD=$(MODULEMDURL) URL="docker=$(IMAGE_NAME)" make test2

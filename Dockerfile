@@ -21,23 +21,20 @@ LABEL com.redhat.component="$NAME" \
 	io.openshift.expose-services="6801:http" \
 	io.openshift.tags="http,proxy,varnish,varnish5" 
 
-COPY files/varnish.repo /etc/yum.repos.d/
-
 #install varnish
-RUN microdnf --nodocs --enablerepo varnish install -y varnish && \
-    microdnf clean all
+RUN microdnf install -y varnish --nodocs && \
+    microdnf clean all && \
+    mkdir /varnish_secret &&  mkdir /varnish_config && \
+    dd if=/dev/random of=/varnish_secret/varnish_secret count=1
 
 # Add configuration file
-COPY files/default.vcl /etc/varnish/default.vcl
-
-# Add secret file for varnishadm
-COPY files/varnish_secret /etc/varnish_secret  
+COPY files/default.vcl /varnish_config/default.vcl
 
 # Copy help file
-COPY root/help.1 /help.1
+COPY root/help.1 /
 
 # Expose ports for varnish and it's admin CLI
 EXPOSE 6801 6802
 
-# Start varnish in the foreground
-CMD /usr/sbin/varnishd -f /etc/varnish/default.vcl -a :6081 -T :6082 -s malloc,256M -S /etc/varnish_secret -F
+# Generate a new secret and start varnish in the foreground
+CMD /usr/sbin/varnishd -f /varnish_config/default.vcl -a :6081 -T :6082 -s malloc,256M -S /varnish_secret/varnish_secret -F

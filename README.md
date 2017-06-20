@@ -1,10 +1,10 @@
 # Varnish HTTP Cache container
 
-This repository contains resources for Varnish cache container. This is an example, so it is not recommended to use it in production, but feel free to try it out. It uses base runtime with Varnish installed as a module.
+This repository contains resources for Varnish cache container. This is an example, so it is not recommended to use it in production, but feel free to try it out. It uses Fedora 26 Boltron as a base image with Varnish installed as a module.
 
 # Configuration
 
-You can find the configuration file default.vcl in **files** folder. This directory also contains the varnish_secret file which is used as an authentification token. **The varnish_secret file needs to be replaced by your own! Otherwise, everyone will be able to access your Varnish admin CLI!** You can generate your own secret as described [here](https://www.varnish-cache.org/docs/4.1/users-guide/run_security.html#cli-interface-authentication). 
+You can find the configuration file default.vcl in **files** folder. Varnish secret file is generated each time the container is built, for better security. While this provides *some* security, we strongly advise you always use your own secret (see below in [Running in Docker](#Running-in-Docker)) or do not expose `<MANAGEMENT_PORT>` if you don't need it.
 
 ## Backend servers
 
@@ -27,10 +27,10 @@ backend back1 {
 Note that the port needs to be the one in the container, not in the host. Last step is to link the container itself to your Varnish container. When running the Varnish container, add parameter `--link container_name:hostname` for each backend server running in container from localhost. For my example container I would run it like this:
 
 ```Shell
-$ docker run -p 6081:6081 -p 6082:6082 --link stupefied_albattani:back1  varnish
+$ docker run -p 6081:6081 -p 6082:6082 --link stupefied_albattani:back1 -v <CONFIG_DIR>:/varnish_config/
 
 ``` 
-You might have noticed some ports are published, which will be explained in the next section
+You might have noticed some ports are published and some volume is mounted, which will be explained in the next section.
 
 # Running in Docker
 There are two ways you can run this container in Docker.
@@ -38,13 +38,34 @@ There are two ways you can run this container in Docker.
 1\) **From shell**
 
 ```Shell
-docker run -p <PORT>:6081 -p <MANAGEMENT_PORT>:6082
+docker run -p <PORT>:6081
 ```
-This is the basic execution of the container. `<PORT>` is the cache frontend on which it will serve content. `<MANAGEMENT_PORT>` is port for Varnish admin CLI. To access it, you'll need the varnish secret file. Varnish admin CLI is documented [here](https://varnish-cache.org/docs/4.1/reference/varnishadm.html). You can also link containers to be used as backend servers, as described in previous section.
+This is the basic execution of the container. `<PORT>` is the cache frontend on which it will serve content. Varnish has it's own admin CLI (see `<MANAGEMENT_PORT>` below). To access it, you'll need the varnish secret file. Varnish admin CLI is documented [here](https://varnish-cache.org/docs/4.1/reference/varnishadm.html). You can mount your secret file, that has to be named varnish_secret like this:
+
+```Shell
+docker run -p <PORT>:6081 -p <MANAGEMENT_PORT>:6082 -v <SECRET_DIR>:/varnish_secret/
+```
+
+If you want to use your configuration instead of the default one, name it default.vcl and mount it like this:
+
+
+```
+docker run -p $PORT:6081 -v <CONFIG_DIR>:/varnish_config/
+```
+
+Where `<CONFIG_DIR>` is a directory that contains default.vcl file.
+
+If mounting gives you an error, it might be due to SELinux, you can then apply following:
+
+```
+chcon -Rt svirt_sandbox_file_t <DIR>
+```
+
+You can also link containers to be used as backend servers, as described in previous section.
 
 2\) **With a Makefile**
 
-To make it easier for you, this repository contains a Makefile. It can be easily configured to customize running this container to your needs. Note that this Makefile runs container in detached mode (-d flag) by default.
+To make it easier for you, this repository contains a Makefile. It can be easily configured to customize running this container to your needs. Note that it does not provide a way to mount varnish_secret or custom configuration. Feel free to edit it to your needs
 ```Makefile
 # Docker container tag
 IMAGE_NAME = varnish
@@ -61,7 +82,7 @@ MANAGEMENT_PORT = 6082
 LINK = 
 
 # Addtional flags for Docker
-FLAGS = -d
+FLAGS = 
 ```
 
 # Running in Openshift
